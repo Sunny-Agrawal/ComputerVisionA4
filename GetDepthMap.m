@@ -1,4 +1,4 @@
-function depthMap = GetDepthMap(firstImage, secondImage, hw, dispRange)
+function depthMat = GetDepthMap(firstImage, secondImage, hw, dispRange)
 %returns the depth map from a basic stareo match between two images
 %THE IMAGES MUST ALREADY HAVE BEEN RECTIFIED
 windowSize = hw * 2 + 1;
@@ -13,7 +13,7 @@ paddedFirstImage = zeros(imDimensions(1) + 2 * hw, imDimensions(2) + 2 * hw);
 paddedFirstImage(hw + 1 : imDimensions(1) + hw, hw + 1 : imDimensions(2) + hw) = firstGrayMat;
 paddedSecondImage = zeros(imDimensions(1) + 2 * hw, imDimensions(2) + 2 * hw);
 paddedSecondImage(hw + 1 : imDimensions(1) + hw, hw + 1 : imDimensions(2) + hw) = secondGrayMat;
-paddedDepthMap = zeros(imDimensions + hw);
+depthMat = zeros(imDimensions);
 
 %pick between ssd and normalized correlation
 ssd = true;
@@ -49,6 +49,7 @@ for column = 1 : imDimensions(2)
            rightWindows(:, :, rightWindowIndex) = window;
            rightWindowIndex = rightWindowIndex + 1;
        end
+       depthMat(row, column) = SSDcompare(leftWindow, rightWindows);
    end
    
 end
