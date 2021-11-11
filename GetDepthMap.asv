@@ -1,4 +1,4 @@
-function [ssdMat, normCorMat] = GetDepthMap(firstImage, secondImage, hw, dispRange)
+function depthMat = GetDepthMap(firstImage, secondImage, hw, dispRange)
 %returns the depth map from a basic stareo match between two images
 %THE IMAGES MUST ALREADY HAVE BEEN RECTIFIED
 windowSize = hw * 2 + 1;
@@ -13,11 +13,10 @@ paddedFirstImage = zeros(imDimensions(1) + 2 * hw, imDimensions(2) + 2 * hw);
 paddedFirstImage(hw + 1 : imDimensions(1) + hw, hw + 1 : imDimensions(2) + hw) = firstGrayMat;
 paddedSecondImage = zeros(imDimensions(1) + 2 * hw, imDimensions(2) + 2 * hw);
 paddedSecondImage(hw + 1 : imDimensions(1) + hw, hw + 1 : imDimensions(2) + hw) = secondGrayMat;
-ssdMat = zeros(imDimensions);
-normCorMat = zeros(imDimensions);
+depthMat = zeros(imDimensions);
 
 %pick between ssd and normalized correlation
-ssd = true;
+ssd = false;
 
 %Basic algorithm: For each pixel scan along the epipolar line in the second
 %image and pick the lowest dispRange.
@@ -50,8 +49,11 @@ for column = 1 : imDimensions(2)
            rightWindows(:, :, rightWindowIndex) = window;
            rightWindowIndex = rightWindowIndex + 1;
        end
-       ssdMat(row, column) = SSDcompare(leftWindow, rightWindows);
-       normCorMat(row, column) = normCorCompare(leftWindow, rightWindows);     
+       if ssd
+           depthMat(row, column) = SSDcompare(leftWindow, rightWindows);
+       else
+           depthMat(row, column) = normCorCompare(leftWindow, rightWindows);     
+       end
    end
    
 end
