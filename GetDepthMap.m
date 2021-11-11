@@ -55,3 +55,6 @@ for column = 1 : imDimensions(2)
    end
    
 end
+
+subplot(1, 2, 1), imagesc(ssdMat);
+subplot(1, 2, 2), imagesc(normCorMat);
