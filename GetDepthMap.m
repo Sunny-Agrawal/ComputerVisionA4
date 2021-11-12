@@ -57,4 +57,8 @@ for column = 1 : imDimensions(2)
 end
 
 subplot(1, 2, 1), imagesc(ssdMat);
+title('SSD');
 subplot(1, 2, 2), imagesc(normCorMat);
+title('Normalized Correlation');
+titleTxt =  ['Window Size = ', num2str(hw * 2 + 1), ' Range = ', num2str(dispRange)];
+sgtitle(titleTxt);
